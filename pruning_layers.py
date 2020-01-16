@@ -3,10 +3,10 @@ import numpy as np
 from torch import nn
 import torch.nn.functional as F
 
-class SparseConv2d(Module):
+class SparseConv2d(nn.Module):
     """ A wrapper over Conv2D that applies a bitmask to zero out pruned connections.
     """
-    def __init__(self, C_in, C_out, kernel, stride, padding = 0, bias = True):
+    def __init__(self, C_in, C_out, kernel, stride=1, padding = 0, bias = True):
         super().__init__()
         
         # Save conv arguments
@@ -18,11 +18,11 @@ class SparseConv2d(Module):
         self.input_shape = 0
         
         # Parameterize weight and mask for F.conv2d
-        self.weight = Parameter(torch.Tensor(C_out,C_in,kernel,kernel))
-        self.mask = Parameter(torch.ones(C_out,C_in,kernel,kernel), requires_grad=False)
+        self.weight = nn.Parameter(torch.Tensor(C_out,C_in,kernel,kernel))
+        self.mask = nn.Parameter(torch.ones(C_out,C_in,kernel,kernel), requires_grad=False)
         
         if bias:
-            self.bias = Parameter(torch.Tensor(out_channels))
+            self.bias = nn.Parameter(torch.Tensor(C_out))
         else:
             self.register_parameter('bias', None) #ref https://github.com/pytorch/pytorch/issues/143
             
