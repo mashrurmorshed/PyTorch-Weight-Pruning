@@ -49,7 +49,7 @@ class SparseConv2d(nn.Module):
         weight = self.weight.data.cpu().numpy()
         mask = self.mask.data.cpu().numpy()
         # Calculate new bitmask
-        new_mask = np.where(abs(tensor) < threshold, 0, mask)
+        new_mask = np.where(abs(weight) < threshold, 0, mask)
         # Apply the new mask and update the existing mask
         self.weight.data = torch.from_numpy(weight * new_mask).to(weight_dev)
         self.mask.data = torch.from_numpy(new_mask).to(mask_dev)
@@ -93,7 +93,7 @@ class SparseLinear(nn.Module):
         weight = self.weight.data.cpu().numpy()
         mask = self.mask.data.cpu().numpy()
         # Calculate new bitmask
-        new_mask = np.where(abs(tensor) < threshold, 0, mask)
+        new_mask = np.where(abs(weight) < threshold, 0, mask)
         # Apply the new mask and update the existing mask
         self.weight.data = torch.from_numpy(weight * new_mask).to(weight_dev)
         self.mask.data = torch.from_numpy(new_mask).to(mask_dev)
