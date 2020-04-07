@@ -30,8 +30,8 @@ class LeNet5(nn.Module):
         
     def forward(self, input):
         out = self.block1(input)
-        out = self.block2(input)
-        out = self.block3(input)
+        out = self.block2(out)
+        out = self.block3(out)
         out = out.view(-1,120)
         out = self.fc(out)
         return out
